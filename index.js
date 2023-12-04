@@ -71,7 +71,6 @@ app.post('/api/loc', async (req, res) => {
       subject: 'Visit your Portfolio by a new Person',
       text: `A new location (${name}) has been added with coordinates: ${coordinates}`,
     };
-
     await transporter.sendMail(mailOptions);
 
     res.status(201).json({ message: 'Location added successfully' });
