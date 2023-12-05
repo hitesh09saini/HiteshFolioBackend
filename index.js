@@ -78,6 +78,7 @@ app.post('/api/loc', async (req, res) => {
       longitude,
       latitude
     });
+    
 
     await newLocation.save();
 
