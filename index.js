@@ -18,22 +18,43 @@ mongoose.connect(MdURI)
     console.error('MDB Connection Error:', err);
   });
 
-  const locationSchema = new mongoose.Schema({
-    name: {
-      type: String,
-      required: true,
-    },
-    longitude: {
-      type: Number,
-      // required: true,
-    },
-    latitude: {
-      type: Number,
-      // required: true,
-    },
+const locationSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  longitude: {
+    type: Number,
+    // required: true,
+  },
+  latitude: {
+    type: Number,
+    // required: true,
+  },
 
-  });
-  
+});
+
+
+
+const getGeolocationName = async (latitude, longitude) => {
+  try {
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}`
+    );
+
+    if (!response.ok) {
+      throw new Error('Failed to retrieve location name');
+    }
+
+    const data = await response.json();
+    const locationName = data.results[0].formatted_address;
+
+    return locationName;
+  } catch (error) {
+    throw new Error(`Error getting location name: ${error.message}`);
+  }
+};
+
 const Location = mongoose.model('Location', locationSchema);
 
 app.listen(PORT, () => {
@@ -46,9 +67,9 @@ app.get('/', (req, res) => {
 
 app.post('/api/loc', async (req, res) => {
   try {
-    const {name,  longitude, latitude } = req.body;
+    const { name, longitude, latitude } = req.body;
 
-    
+
 
     console.log('Received request body:', req.body, name);
 
@@ -71,22 +92,4 @@ app.post('/api/loc', async (req, res) => {
 
 
 
-  const getGeolocationName = async (latitude, longitude) => {
-    try {
-      const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}`
-      );
-  
-      if (!response.ok) {
-        throw new Error('Failed to retrieve location name');
-      }
-  
-      const data = await response.json();
-      const locationName = data.results[0].formatted_address;
-  
-      return locationName;
-    } catch (error) {
-      throw new Error(`Error getting location name: ${error.message}`);
-    }
-  };
 
