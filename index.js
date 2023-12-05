@@ -35,7 +35,6 @@ const locationSchema = new mongoose.Schema({
 });
 
 
-
 const getGeolocationName = async (latitude, longitude) => {
   try {
     const response = await fetch(
@@ -73,9 +72,9 @@ app.post('/api/loc', async (req, res) => {
 
     console.log('Received request body:', req.body, name);
 
-    const nam = getGeolocationName(longitude, latitude);
+    // const nam = getGeolocationName(longitude, latitude);
     const newLocation = new Location({
-      nam,
+      name,
       longitude,
       latitude
     });
