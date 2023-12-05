@@ -4,14 +4,17 @@ const cors = require('cors');
 require('dotenv').config();
 
 const app = express();
-const PORT = 3000;
-const MdURI = process.env.MONGO_URI;
+const PORT = process.env.PORT || 3000; 
+const MONGO_URI = process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect(MdURI)
+let MDconn = false;
+
+mongoose.connect(MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
+    MDconn = true;
     console.log('MongoDB Connected!');
   })
   .catch((err) => {
@@ -40,14 +43,17 @@ app.listen(PORT, () => {
 });
 
 app.get('/', (req, res) => {
-  res.send('Server Connected!');
+  res.json({
+    "Server": "Server is Running ",
+    "Database": `${MDconn ? "MongoDB is Connected" : "...."}`
+  });
 });
 
 app.post('/api/loc', async (req, res) => {
   try {
     const { name, longitude, latitude } = req.body;
 
-    console.log('Received request body:', req.body, name);
+    console.log('Received request body:', req.body);
 
     const newLocation = new Location({
       name,
