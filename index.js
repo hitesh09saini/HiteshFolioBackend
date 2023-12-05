@@ -25,34 +25,13 @@ const locationSchema = new mongoose.Schema({
   },
   longitude: {
     type: Number,
-    // required: true,
+    required: true,
   },
   latitude: {
     type: Number,
-    // required: true,
+    required: true,
   },
-
 });
-
-
-const getGeolocationName = async (latitude, longitude) => {
-  try {
-    const response = await fetch(
-      `https://maps.googleapis.com/maps/api/geocode/json?latlng=${latitude},${longitude}&key=${process.env.GOOGLE_MAPS_API_KEY}`
-    );
-
-    if (!response.ok) {
-      throw new Error('Failed to retrieve location name');
-    }
-
-    const data = await response.json();
-    const locationName = data.results[0].formatted_address;
-
-    return locationName;
-  } catch (error) {
-    throw new Error(`Error getting location name: ${error.message}`);
-  }
-};
 
 const Location = mongoose.model('Location', locationSchema);
 
@@ -68,17 +47,13 @@ app.post('/api/loc', async (req, res) => {
   try {
     const { name, longitude, latitude } = req.body;
 
-
-
     console.log('Received request body:', req.body, name);
 
-    // const nam = getGeolocationName(longitude, latitude);
     const newLocation = new Location({
       name,
       longitude,
       latitude
     });
-    
 
     await newLocation.save();
 
@@ -88,8 +63,3 @@ app.post('/api/loc', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
-
-
-
-
-
