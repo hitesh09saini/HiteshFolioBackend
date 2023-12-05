@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const app = express();
 const PORT = 3000;
-const MdURI = 'mongodb://127.0.0.1:27017/portfolio';
+const MdURI = process.env.MONGO_URI;
 
 app.use(cors());
 app.use(express.json());
