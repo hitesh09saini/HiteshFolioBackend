@@ -72,6 +72,7 @@ app.post('/api/loc', async (req, res) => {
 });
 
 
+
 // likes
 
 const LikeSchema = new mongoose.Schema({
@@ -94,6 +95,7 @@ app.post('/api/likes', async (req, res) => {
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
   }
 });
+
 
 app.get('/api/likes', async (req, res) => {
   try {
