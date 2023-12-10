@@ -1,11 +1,14 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-require('dotenv').config();
 
+
+const sendEmail = require('./mail');
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
+const messageGen = require('./messageGenerate')
 
 app.use(cors());
 app.use(express.json());
@@ -64,7 +67,14 @@ app.post('/api/loc', async (req, res) => {
 
     await newLocation.save();
 
-    res.status(201).json({ message: 'Location added successfully' });
+
+    const email = process.env.SMTP_FROM_EMAIL;
+    const subject = 'a person view your portfolio !';
+    const message = await messageGen(longitude, latitude);
+
+    await sendEmail(email, subject, message);
+
+    res.status(201).json({ message: 'Location added successfully and send mail' });
   } catch (error) {
     console.error('Error adding location:', error);
     res.status(500).json({ error: 'Internal Server Error', details: error.message });
