@@ -81,6 +81,74 @@ app.post('/api/loc', async (req, res) => {
   }
 });
 
+app.post('/send/mail', async (req, res)=>{
+  const {email, name , message} = req.body;
+   if(!email||!name||!message){
+    throw res.status(400).send('all files are required ');
+   }
+  const cmess = `<!DOCTYPE html>
+  <html lang="en">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Send Email From HiteshFolio</title>
+      <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f0f0f0;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        .notification-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #4285f4;
+        }
+
+        .location-info {
+            margin-top: 20px;
+        }
+
+        p {
+            margin: 8px 0;
+        }
+    </style>
+  </head>
+  <body>
+    
+  <div class="notification-container">
+  <h1>${name} is mail for you</h1>
+  <div class="location-info">
+      <p>message: <span>${message}</span></p>
+      <p>Name: <span >${name}</span></p>
+      <p>Email: <span >${email}</span></p>
+  </div>
+</div>
+
+  
+  </body>
+  </html>
+  `
+
+  const subject = "A Profile viewer Send mail";
+  await sendEmail(email, subject, cmess);
+  console.log('mail send successfully');
+
+  res.status(200).send('mail send successfully');
+})
+
 
 
 // likes
