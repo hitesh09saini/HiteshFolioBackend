@@ -81,12 +81,16 @@ app.post('/api/loc', async (req, res) => {
   }
 });
 
-app.post('/send/mail', async (req, res)=>{
-  const {email, name , message} = req.body;
-   if(!email||!name||!message){
-    throw res.status(400).send('all files are required ');
-   }
-  const cmess = `<!DOCTYPE html>
+app.post('/send/mail', async (req, res) => {
+  try {
+    const { email, name, message } = req.body;
+
+    console.log(email, name, message);
+
+    if (!email || !name || !message) {
+      throw res.status(400).send('all files are required ');
+    }
+    const cmess = `<!DOCTYPE html>
   <html lang="en">
   <head>
       <meta charset="UTF-8">
@@ -142,11 +146,15 @@ app.post('/send/mail', async (req, res)=>{
   </html>
   `
 
-  const subject = "A Profile viewer Send mail";
-  await sendEmail(email, subject, cmess);
-  console.log('mail send successfully');
+    const subject = "A Profile viewer Send mail";
+    await sendEmail(email, subject, cmess);
+    console.log('mail send successfully');
 
-  res.status(200).send('mail send successfully');
+    res.status(200).send('mail send successfully');
+  } catch (error) {
+    console.error('Error sending mail:', error);
+    res.status(500).send('Internal Server Error');
+  }
 })
 
 
