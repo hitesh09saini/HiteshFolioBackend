@@ -59,10 +59,10 @@ app.post('/api/loc', async (req, res) => {
     const {longitude, latitude } = req.body;
 
     console.log('Received request body:', req.body);
-    const locationName = await fetchLocationName(latitude, longitude);
+    const name = await fetchLocationName(latitude, longitude);
 
     const newLocation = new Location({
-      name:locationName,
+      name,
       longitude,
       latitude
     });
