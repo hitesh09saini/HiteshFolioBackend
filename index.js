@@ -9,6 +9,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGO_URI = process.env.MONGO_URI;
 const messageGen = require('./messageGenerate')
+const fetchLocationName = require('./getLocation');
 
 app.use(cors());
 app.use(express.json());
@@ -58,7 +59,9 @@ app.post('/api/loc', async (req, res) => {
     const { name, longitude, latitude } = req.body;
 
     console.log('Received request body:', req.body);
+    const locationName = await fetchLocationName(latitude, longitude);
 
+    name = locationName;
     const newLocation = new Location({
       name,
       longitude,
